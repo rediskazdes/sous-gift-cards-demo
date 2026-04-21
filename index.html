@@ -82,7 +82,6 @@
     .sidebar {
       width: 220px;
       background: #1e293b;
-      border-right: none;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -128,8 +127,6 @@
       margin-top: auto;
       padding: 12px 16px;
       border-top: 1px solid #334155;
-      font-size: 12px;
-      color: #94a3b8;
     }
     .vendor-pill {
       display: flex;
@@ -165,11 +162,14 @@
       justify-content: space-between;
       flex-shrink: 0;
     }
-    .topbar-title { font-size: 15px; font-weight: 600; }
     .topbar-breadcrumb { font-size: 12px; color: var(--text-muted); }
     .topbar-breadcrumb span { color: var(--text); }
 
     .content { padding: 28px; flex: 1; max-width: 960px; }
+
+    /* ── Views ── */
+    .view { display: none; }
+    .view.active { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 
     /* ── Settings tabs ── */
     .settings-tabs {
@@ -195,7 +195,7 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* ── Screens within Gift Cards tab ── */
+    /* ── Screens ── */
     .screen { display: none; }
     .screen.active { display: block; }
 
@@ -347,10 +347,6 @@
     .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
     .alert-icon { flex-shrink: 0; font-size: 14px; }
     .alert-link { color: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
-
-    /* ── Validation state ── */
-    .validating { display: none; }
-    .validated { display: none; }
     .validate-error { display: none; color: var(--danger); font-size: 11px; margin-top: 5px; }
     .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
 
@@ -375,7 +371,7 @@
     }
     .cheat-desc { color: #92400e; font-size: 10px; line-height: 1.4; }
 
-    /* ── Product list ── */
+    /* ── Tables ── */
     .list-header {
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 16px;
@@ -422,6 +418,8 @@
       background: var(--surface-3); border: 1px solid var(--border);
       border-radius: 5px; padding: 3px 6px; font-size: 10px; color: var(--text-muted);
     }
+    .delivery-shipping { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+    .delivery-email { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
 
     .row-actions { display: flex; gap: 6px; opacity: 0; transition: opacity 0.15s; }
     .table tbody tr:hover .row-actions { opacity: 1; }
@@ -433,7 +431,7 @@
     .action-btn:hover { background: var(--surface-3); color: var(--text); }
     .action-btn.delete:hover { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
 
-    /* ── Edit form page ── */
+    /* ── Form / detail page ── */
     .form-page-header {
       display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
     }
@@ -450,7 +448,42 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    /* ── Shimmer / loading ── */
+    /* ── Detail field rows ── */
+    .detail-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .detail-label { color: var(--text-muted); font-size: 12px; flex-shrink: 0; min-width: 160px; }
+    .detail-value { color: var(--text); font-family: inherit; }
+    .detail-value.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--text-muted); }
+
+    /* ── Balance widget ── */
+    .balance-widget {
+      background: var(--success-bg); border: 1px solid var(--success-border);
+      border-radius: 8px; padding: 12px 14px; display: inline-flex;
+      flex-direction: column; gap: 4px; margin-top: 6px;
+    }
+    .balance-amount { font-size: 20px; font-weight: 700; color: #15803d; }
+    .balance-meta { font-size: 11px; color: #166534; line-height: 1.6; }
+
+    /* ── Transaction table ── */
+    .tx-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .tx-table th {
+      text-align: left; padding: 7px 10px;
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-dim);
+      border-bottom: 1px solid var(--border); background: var(--surface-2);
+    }
+    .tx-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); }
+    .tx-table tr:last-child td { border-bottom: none; }
+    .tx-type { font-weight: 600; color: var(--text); }
+    .tx-status-success {
+      background: var(--badge-active-bg); color: var(--badge-active-text);
+      padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600;
+    }
+
+    /* ── Spinner / loading ── */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
       width: 14px; height: 14px;
@@ -489,16 +522,15 @@
     .sidebar { height: calc(100vh - 36px); top: 36px; }
 
     /* ── Misc ── */
-    .divider { height: 1px; background: var(--border); margin: 20px 0; }
     .text-muted { color: var(--text-muted); }
     .text-sm { font-size: 12px; }
-
-    /* placeholder settings tabs content */
     .placeholder-content {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 10px; padding: 32px; color: var(--text-muted);
       text-align: center; font-size: 13px;
     }
+    .page-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; }
+    .count-label { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -523,20 +555,17 @@
 
 <!-- Sidebar -->
 <div class="sidebar">
-  <div class="sidebar-logo">
-    <span>SOUS</span> Portal
-  </div>
+  <div class="sidebar-logo"><span>SOUS</span> Portal</div>
   <div class="sidebar-section-label">Dashboard</div>
-  <div class="sidebar-item"><span class="icon">📦</span> Orders</div>
-  <div class="sidebar-item"><span class="icon">🍽️</span> Products</div>
-  <div class="sidebar-item"><span class="icon">🎁</span> Gift Cards</div>
-  <div class="sidebar-item" style="padding-left: 32px; font-size: 12px;"><span class="icon">📋</span> Issued</div>
+  <div class="sidebar-item" onclick="switchView('settings')"><span class="icon">📦</span> Orders</div>
+  <div class="sidebar-item" onclick="switchView('settings')"><span class="icon">🍽️</span> Products</div>
+  <div class="sidebar-item" onclick="switchView('settings')"><span class="icon">🎁</span> Gift Cards</div>
+  <div class="sidebar-item" id="nav-issued" style="padding-left: 32px; font-size: 12px;" onclick="switchView('issued')"><span class="icon">📋</span> Issued</div>
   <div class="sidebar-item" style="padding-left: 32px; font-size: 12px;"><span class="icon">💳</span> Redeem</div>
   <div class="sidebar-section-label">Configuration</div>
-  <div class="sidebar-item active"><span class="icon">⚙️</span> Settings</div>
+  <div class="sidebar-item active" id="nav-settings" onclick="switchView('settings')"><span class="icon">⚙️</span> Settings</div>
   <div class="sidebar-item"><span class="icon">📊</span> Analytics</div>
   <div class="sidebar-item"><span class="icon">⭐</span> Reviews</div>
-
   <div class="sidebar-vendor">
     <div class="vendor-pill">
       <div class="vendor-avatar">AG</div>
@@ -548,14 +577,14 @@
   </div>
 </div>
 
-<!-- Main -->
-<div class="main">
+<!-- ══════════════════════════════════════════
+     VIEW: SETTINGS
+     ══════════════════════════════════════════ -->
+<div class="view active" id="view-settings">
   <div class="topbar">
     <div class="topbar-breadcrumb">Settings → <span>Gift Cards</span></div>
   </div>
-
   <div class="content">
-    <!-- Settings tabs -->
     <div class="settings-tabs">
       <div class="tab" onclick="switchTab('kitchen')">Kitchen</div>
       <div class="tab" onclick="switchTab('vendor')">Vendor</div>
@@ -563,22 +592,16 @@
       <div class="tab active" onclick="switchTab('giftcards')">Gift Cards <span class="tab-new">New</span></div>
     </div>
 
-    <!-- Kitchen tab (placeholder) -->
     <div class="tab-panel" id="tab-kitchen">
       <div class="placeholder-content">Kitchen settings — not part of this demo</div>
     </div>
-
-    <!-- Vendor tab (placeholder) -->
     <div class="tab-panel" id="tab-vendor">
       <div class="placeholder-content">Vendor settings — not part of this demo</div>
     </div>
-
-    <!-- Locations tab (placeholder) -->
     <div class="tab-panel" id="tab-locations">
       <div class="placeholder-content">Locations — not part of this demo</div>
     </div>
 
-    <!-- Gift Cards tab -->
     <div class="tab-panel active" id="tab-giftcards">
 
       <!-- SCREEN 1: Empty state -->
@@ -587,9 +610,7 @@
           <div class="empty-icon">🎁</div>
           <div class="empty-title">Start selling gift cards</div>
           <div class="empty-desc">Connect your Gifty account to create and manage gift card products for your customers.</div>
-          <button class="btn btn-primary" onclick="showScreen('screen-wizard-1')">
-            Set up gift cards
-          </button>
+          <button class="btn btn-primary" onclick="showScreen('screen-wizard-1')">Set up gift cards</button>
         </div>
       </div>
 
@@ -618,26 +639,18 @@
                 <div class="form-hint">Find this in your <a href="#" onclick="return false">Gifty dashboard → Settings → API</a></div>
                 <div class="validate-error" id="token-error"></div>
               </div>
-
-              <!-- Validating -->
               <div class="alert alert-info" id="validating-state" style="display:none;">
                 <div class="alert-icon"><div class="spinner"></div></div>
                 <div>Validating token with Gifty…</div>
               </div>
-
-              <!-- Success: connected with products -->
               <div class="alert alert-success" id="state-success" style="display:none;">
                 <div class="alert-icon">✓</div>
                 <div><strong>Connected as Akropolis Geleen</strong><br>3 Gifty products available and ready to link.</div>
               </div>
-
-              <!-- Success: connected but no products -->
               <div class="alert alert-warning" id="state-no-products" style="display:none;">
                 <div class="alert-icon">⚠</div>
                 <div><strong>Connected — but no products found</strong><br>Create gift card products in your <a class="alert-link" href="#" onclick="return false">Gifty dashboard</a> first, then come back.</div>
               </div>
-
-              <!-- Network / server error -->
               <div class="alert alert-error" id="state-network-error" style="display:none;">
                 <div class="alert-icon">✕</div>
                 <div><strong>Could not reach Gifty</strong><br>Check your internet connection and try again, or contact support if the problem persists.</div>
@@ -645,13 +658,9 @@
             </div>
             <div class="wizard-footer">
               <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-empty')">Cancel</button>
-              <button class="btn btn-primary btn-sm" id="step1-next-btn" onclick="validateToken()">
-                Validate &amp; Next →
-              </button>
+              <button class="btn btn-primary btn-sm" id="step1-next-btn" onclick="validateToken()">Validate &amp; Next →</button>
             </div>
           </div>
-
-          <!-- Cheat sheet -->
           <div class="cheat-sheet" style="margin-top: 20px;">
             <div class="cheat-sheet-title">🔑 Demo states</div>
             <div class="cheat-row">
@@ -685,7 +694,7 @@
             <div class="wizard-title">Set up gift cards</div>
             <div class="wizard-subtitle">Add your first gift card product</div>
             <div class="wizard-steps">
-              <div class="wizard-step-dot done" id="dot-step1-done">
+              <div class="wizard-step-dot done">
                 <div class="step-num">✓</div> Connect Gifty
               </div>
               <div class="step-divider"></div>
@@ -699,7 +708,6 @@
               <div class="alert-icon">💡</div>
               <div>Don't have Gifty products yet? <a class="alert-link" href="#" onclick="return false">Create them in your Gifty dashboard →</a> then come back.</div>
             </div>
-
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Title <span class="required">*</span></label>
@@ -731,9 +739,7 @@
               <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-wizard-1')">← Back</button>
               <button class="btn btn-ghost btn-sm" onclick="showScreen('screen-list')">Skip for now</button>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="showScreen('screen-list')">
-              Save &amp; finish
-            </button>
+            <button class="btn btn-primary btn-sm" onclick="showScreen('screen-list')">Save &amp; finish</button>
           </div>
         </div>
       </div>
@@ -748,11 +754,8 @@
               Connected to Gifty
             </div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="showScreen('screen-edit', true)">
-            + Add gift card
-          </button>
+          <button class="btn btn-primary btn-sm" onclick="showScreen('screen-edit', true)">+ Add gift card</button>
         </div>
-
         <div class="table-wrap">
           <table class="table">
             <thead>
@@ -769,14 +772,10 @@
             <tbody>
               <tr onclick="showScreen('screen-edit', false)">
                 <td><strong>€25 Gift Card</strong></td>
-                <td><span class="text-muted text-sm" style="font-family: monospace;">gc_25_akropolis_geleen</span></td>
+                <td><span class="text-muted text-sm" style="font-family:monospace">gc_25_akropolis_geleen</span></td>
                 <td>Set amount</td>
                 <td>€25.00</td>
-                <td>
-                  <div class="delivery-icons">
-                    <span class="delivery-icon">✉ Digital</span>
-                  </div>
-                </td>
+                <td><div class="delivery-icons"><span class="delivery-icon delivery-email">✉ Digital</span></div></td>
                 <td><span class="badge badge-active">Active</span></td>
                 <td>
                   <div class="row-actions" onclick="event.stopPropagation()">
@@ -787,13 +786,13 @@
               </tr>
               <tr onclick="showScreen('screen-edit', false)">
                 <td><strong>€50 Gift Card</strong></td>
-                <td><span class="text-muted text-sm" style="font-family: monospace;">gc_50_akropolis_geleen</span></td>
+                <td><span class="text-muted text-sm" style="font-family:monospace">gc_50_akropolis_geleen</span></td>
                 <td>Set amount</td>
                 <td>€50.00</td>
                 <td>
                   <div class="delivery-icons">
-                    <span class="delivery-icon">✉ Digital</span>
-                    <span class="delivery-icon">📦 Shipping</span>
+                    <span class="delivery-icon delivery-email">✉ Digital</span>
+                    <span class="delivery-icon delivery-shipping">📦 Shipping</span>
                   </div>
                 </td>
                 <td><span class="badge badge-active">Active</span></td>
@@ -806,14 +805,10 @@
               </tr>
               <tr onclick="showScreen('screen-edit', false)">
                 <td><strong>Gift Voucher (own amount)</strong></td>
-                <td><span class="text-muted text-sm" style="font-family: monospace;">gc_own_akropolis_geleen</span></td>
+                <td><span class="text-muted text-sm" style="font-family:monospace">gc_own_akropolis_geleen</span></td>
                 <td>Own amount</td>
                 <td><span class="text-muted">—</span></td>
-                <td>
-                  <div class="delivery-icons">
-                    <span class="delivery-icon">✉ Digital</span>
-                  </div>
-                </td>
+                <td><div class="delivery-icons"><span class="delivery-icon delivery-email">✉ Digital</span></div></td>
                 <td><span class="badge badge-draft">Draft</span></td>
                 <td>
                   <div class="row-actions" onclick="event.stopPropagation()">
@@ -830,15 +825,12 @@
       <!-- SCREEN 5: Edit / Create form -->
       <div class="screen" id="screen-edit">
         <div class="form-page-header">
-          <button class="back-btn" onclick="showScreen('screen-list')">
-            ← Back to products
-          </button>
+          <button class="back-btn" onclick="showScreen('screen-list')">← Back to products</button>
         </div>
-        <div id="form-page-title-wrap" style="margin-bottom: 24px;">
+        <div style="margin-bottom: 24px;">
           <div class="form-page-title" id="form-page-title">Edit gift card</div>
           <div class="text-sm text-muted" style="margin-top: 4px;">Changes are saved when you click Save.</div>
         </div>
-
         <div class="form-card">
           <div class="form-section-label">Basic Info</div>
           <div class="form-group">
@@ -847,7 +839,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Description</label>
-            <textarea class="form-input" rows="3" style="resize: vertical;">Give the gift of a great meal. Perfect for any occasion.</textarea>
+            <textarea class="form-input" rows="3" style="resize:vertical">Give the gift of a great meal. Perfect for any occasion.</textarea>
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -877,59 +869,257 @@
           </div>
           <div class="form-group">
             <label class="form-label">Status</label>
-            <select class="form-select" style="max-width: 200px;">
+            <select class="form-select" style="max-width:200px">
               <option selected>Active</option>
               <option>Draft</option>
             </select>
           </div>
         </div>
-
         <div class="form-card">
           <div class="form-section-label">Delivery &amp; Shipping</div>
           <div class="form-group">
             <label class="form-label">Available delivery options</label>
             <div class="form-checkbox-group">
-              <label class="form-checkbox">
-                <input type="checkbox" checked onchange="toggleShippingPrice()"> Digital (email)
-              </label>
-              <label class="form-checkbox">
-                <input type="checkbox" id="shipping-checkbox" onchange="toggleShippingPrice()"> Shipping (physical)
-              </label>
-              <label class="form-checkbox">
-                <input type="checkbox"> Pickup
-              </label>
+              <label class="form-checkbox"><input type="checkbox" checked onchange="toggleShippingPrice()"> Digital (email)</label>
+              <label class="form-checkbox"><input type="checkbox" id="shipping-checkbox" onchange="toggleShippingPrice()"> Shipping (physical)</label>
+              <label class="form-checkbox"><input type="checkbox"> Pickup</label>
             </div>
           </div>
-          <div class="form-group" id="shipping-price-field" style="display: none;">
+          <div class="form-group" id="shipping-price-field" style="display:none">
             <label class="form-label">Customer shipping price (€)</label>
-            <input class="form-input" type="number" value="0" step="0.01" style="max-width: 160px;">
+            <input class="form-input" type="number" value="0" step="0.01" style="max-width:160px">
             <div class="form-hint">Set to 0 for free shipping</div>
           </div>
         </div>
-
         <div class="form-card">
           <div class="form-section-label">Image</div>
           <div class="form-group">
             <label class="form-label">Main image</label>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 64px; height: 64px; background: var(--surface-3); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">🎁</div>
+            <div style="display:flex; align-items:center; gap:12px">
+              <div style="width:64px;height:64px;background:var(--surface-3);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎁</div>
               <div>
                 <button class="btn btn-secondary btn-sm">Upload image</button>
-                <div class="form-hint" style="margin-top: 6px;">JPG, PNG or GIF · Max 5MB</div>
+                <div class="form-hint" style="margin-top:6px">JPG, PNG or GIF · Max 5MB</div>
               </div>
             </div>
           </div>
         </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px">
           <button class="btn btn-secondary" onclick="showScreen('screen-list')">Cancel</button>
-          <button class="btn btn-primary" onclick="saveAndBack()">Save changes</button>
+          <button class="btn btn-primary" onclick="showScreen('screen-list')">Save changes</button>
         </div>
       </div>
 
     </div><!-- /tab-giftcards -->
   </div><!-- /content -->
-</div><!-- /main -->
+</div><!-- /view-settings -->
+
+
+<!-- ══════════════════════════════════════════
+     VIEW: ISSUED GIFT CARDS
+     ══════════════════════════════════════════ -->
+<div class="view" id="view-issued">
+  <div class="topbar">
+    <div class="topbar-breadcrumb">Gift Cards → <span>Issued</span></div>
+  </div>
+  <div class="content">
+
+    <!-- SCREEN: Issued list -->
+    <div class="screen active" id="screen-issued-list">
+      <div class="list-header">
+        <div class="list-title">Issued Gift Cards</div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Masked Code</th>
+              <th>Balance</th>
+              <th>Delivery</th>
+              <th>Order</th>
+              <th>Gifty Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="showIssuedDetail('gc_0LE31Z47kmWz0MPvQJ5IrzXa', '***********6Q2Y', '100.00', 'Shipping', '239801', '11 Apr 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********6Q2Y</span></td>
+              <td><strong>€100.00</strong></td>
+              <td><span class="delivery-icon delivery-shipping">📦 Shipping</span></td>
+              <td><span style="color:var(--accent);font-size:12px">239801</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">11 Apr 2026, 13:27</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_4KP82NrxQ1MvWZ9bYsTe0JAm', '***********3MP0', '100.00', 'Shipping', '239255', '31 Mar 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********3MP0</span></td>
+              <td><strong>€100.00</strong></td>
+              <td><span class="delivery-icon delivery-shipping">📦 Shipping</span></td>
+              <td><span style="color:var(--accent);font-size:12px">239255</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">31 Mar 2026, 12:25</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_7RJ53HkwV2NpXL4cQsUf1CBn', '***********JHC4', '150.00', 'Shipping', '238020', '9 Mar 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********JHC4</span></td>
+              <td><strong>€150.00</strong></td>
+              <td><span class="delivery-icon delivery-shipping">📦 Shipping</span></td>
+              <td><span style="color:var(--accent);font-size:12px">238020</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">9 Mar 2026, 10:13</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_9SM64IlxW3OqYM5dRtVg2DCo', '***********Z9S2', '100.00', 'Shipping', '237917', '6 Mar 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********Z9S2</span></td>
+              <td><strong>€100.00</strong></td>
+              <td><span class="delivery-icon delivery-shipping">📦 Shipping</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237917</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">6 Mar 2026, 10:01</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_2TN75JmyX4PrZN6eSwWh3EDp', '***********0VEM', '50.00', 'Email', '237580', '26 Feb 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********0VEM</span></td>
+              <td><strong>€50.00</strong></td>
+              <td><span class="delivery-icon delivery-email">✉ Digital</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237580</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">26 Feb 2026, 15:57</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_5UO86KnzY5QsAO7fTxXi4FEq', '***********VFJ6', '100.00', 'Email', '237290', '19 Feb 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********VFJ6</span></td>
+              <td><strong>€100.00</strong></td>
+              <td><span class="delivery-icon delivery-email">✉ Digital</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237290</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">19 Feb 2026, 09:14</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_8VP97LozZ6RtBP8gUyYj5GFr', '***********E6N9', '150.00', 'Email', '237056', '16 Feb 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********E6N9</span></td>
+              <td><strong>€150.00</strong></td>
+              <td><span class="delivery-icon delivery-email">✉ Digital</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237056</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">16 Feb 2026, 18:02</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_1WQ08MpaA7SuCQ9hVzZk6HGs', '***********XZTW', '100.00', 'Email', '237056', '16 Feb 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********XZTW</span></td>
+              <td><strong>€100.00</strong></td>
+              <td><span class="delivery-icon delivery-email">✉ Digital</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237056</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">16 Feb 2026, 18:02</td>
+            </tr>
+            <tr onclick="showIssuedDetail('gc_3XR19NqbB8TvDR0iWaAl7IHt', '***********SU4E', '0.00', 'Email', '237108', '16 Feb 2026')">
+              <td><span style="font-family:monospace;font-size:12px">***********SU4E</span></td>
+              <td><strong>€0.00</strong></td>
+              <td><span class="delivery-icon delivery-email">✉ Digital</span></td>
+              <td><span style="color:var(--accent);font-size:12px">237108</span></td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td class="text-muted text-sm">16 Feb 2026, 17:58</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="count-label">9 issued gift cards</div>
+    </div>
+
+    <!-- SCREEN: Issued detail -->
+    <div class="screen" id="screen-issued-detail">
+      <div class="form-page-header">
+        <button class="back-btn" onclick="showIssuedList()">← Back to issued</button>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <div class="form-page-title" id="detail-title">Gift Card ***********6Q2Y</div>
+        <div class="text-sm text-muted" id="detail-gifty-id" style="margin-top:4px;font-family:monospace">gc_0LE31Z47kmWz0MPvQJ5IrzXa</div>
+      </div>
+
+      <!-- Gift Card Information -->
+      <div class="form-card">
+        <div class="form-section-label">Gift Card Information</div>
+        <div class="detail-row">
+          <span class="detail-label">Masked code</span>
+          <span class="detail-value mono" id="detail-masked-code">***********6Q2Y</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Gifty ID</span>
+          <span class="detail-value mono" id="detail-gifty-full-id">gc_0LE31Z47kmWz0MPvQJ5IrzXa</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Gifty line item ID</span>
+          <span class="detail-value mono" style="font-size:11px">or_K8wJE5RLNdo42V3nAe6bqrlG_line_0</span>
+        </div>
+      </div>
+
+      <!-- Balance Information -->
+      <div class="form-card">
+        <div class="form-section-label">Balance Information</div>
+        <div class="detail-row">
+          <span class="detail-label">Balance</span>
+          <span class="detail-value"><strong id="detail-balance">€100.00</strong></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Currency</span>
+          <span class="detail-value">EUR</span>
+        </div>
+        <div class="detail-row" style="flex-direction:column; align-items:flex-start; gap:8px">
+          <span class="detail-label">Live balance (Gifty API)</span>
+          <div class="balance-widget">
+            <div class="balance-amount" id="detail-live-balance">€100.00</div>
+            <div class="balance-meta">
+              Local stored balance: <span id="detail-local-balance">€100.00</span> EUR<br>
+              Status: Synced<br>
+              Last checked: 2026-04-21 13:24:04<br>
+              Redeemable: Yes
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="form-card">
+        <div class="form-section-label">Order Details</div>
+        <div class="detail-row">
+          <span class="detail-label">Order menu</span>
+          <span class="detail-value" id="detail-order-menu" style="color:var(--accent)">Cadeaubon - €100</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Order</span>
+          <span class="detail-value" id="detail-order" style="color:var(--accent)">#239801</span>
+        </div>
+      </div>
+
+      <!-- Gifty Transactions -->
+      <div class="form-card">
+        <div class="form-section-label">Gifty Transactions</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px">Transaction history from Gifty API</div>
+        <div style="overflow-x:auto">
+          <table class="tx-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="detail-tx-body">
+              <tr>
+                <td><span class="tx-type">ISSUE</span></td>
+                <td><strong>€100.00</strong></td>
+                <td><span class="tx-status-success">SUCCESS</span></td>
+                <td class="text-muted">2026-04-11</td>
+                <td class="text-muted">Issue amount of €100.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:11px; color:var(--text-dim); margin-top:8px">
+          Showing 1 most recent transaction · Last fetched: 2026-04-21 13:24:05
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /view-issued -->
+
 
 <!-- Delete dialog -->
 <div class="dialog-overlay" id="delete-dialog">
@@ -944,7 +1134,7 @@
 </div>
 
 <script>
-  // Gate
+  // ── Gate ──
   (function() {
     if (sessionStorage.getItem('sous_demo_auth') === '1') {
       document.getElementById('gate').classList.add('hidden');
@@ -966,6 +1156,24 @@
     }
   }
 
+  // ── Top-level view switching ──
+  function switchView(view) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + view).classList.add('active');
+
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    if (view === 'settings') {
+      document.getElementById('nav-settings').classList.add('active');
+    } else if (view === 'issued') {
+      document.getElementById('nav-issued').classList.add('active');
+      // reset to list screen
+      document.querySelectorAll('#view-issued .screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-issued-list').classList.add('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Settings tab switching ──
   let tokenValidated = false;
 
   function switchTab(tab) {
@@ -975,42 +1183,94 @@
     document.getElementById('tab-' + tab).classList.add('active');
   }
 
+  // ── Screen switching (within settings gift-cards tab) ──
   function showScreen(id, isNew) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#tab-giftcards .screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     if (id === 'screen-edit') {
       document.getElementById('form-page-title').textContent = isNew ? 'Add gift card' : 'Edit gift card';
-      if (isNew) {
-        document.getElementById('edit-title').value = '';
-      } else {
-        document.getElementById('edit-title').value = '€25 Gift Card';
-      }
+      document.getElementById('edit-title').value = isNew ? '' : '€25 Gift Card';
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // ── Issued detail ──
+  function showIssuedDetail(giftyId, maskedCode, balance, delivery, order, date) {
+    const amount = '€' + parseFloat(balance).toFixed(2);
+    const orderMenu = parseFloat(balance) === 150 ? 'Cadeaubon - €150' : parseFloat(balance) === 50 ? 'Cadeaubon - €50' : 'Cadeaubon - €100';
+
+    document.getElementById('detail-title').textContent = 'Gift Card ' + maskedCode;
+    document.getElementById('detail-gifty-id').textContent = giftyId;
+    document.getElementById('detail-masked-code').textContent = maskedCode;
+    document.getElementById('detail-gifty-full-id').textContent = giftyId;
+    document.getElementById('detail-balance').textContent = amount;
+    document.getElementById('detail-live-balance').textContent = amount;
+    document.getElementById('detail-local-balance').textContent = amount;
+    document.getElementById('detail-order-menu').textContent = orderMenu;
+    document.getElementById('detail-order').textContent = '#' + order;
+
+    const txDate = date.replace(' 2026', '-2026').replace('Apr', '04').replace('Mar', '03').replace('Feb', '02')
+      .replace('11-04-2026', '2026-04-11').replace('31-03-2026', '2026-03-31')
+      .replace('9-03-2026', '2026-03-09').replace('6-03-2026', '2026-03-06')
+      .replace('26-02-2026', '2026-02-26').replace('19-02-2026', '2026-02-19')
+      .replace('16-02-2026', '2026-02-16');
+    const txBody = document.getElementById('detail-tx-body');
+    if (parseFloat(balance) === 0) {
+      txBody.innerHTML = `
+        <tr>
+          <td><span class="tx-type">ISSUE</span></td>
+          <td><strong>${amount}</strong></td>
+          <td><span class="tx-status-success">SUCCESS</span></td>
+          <td class="text-muted">${txDate}</td>
+          <td class="text-muted">Issue amount of ${amount}</td>
+        </tr>
+        <tr>
+          <td><span class="tx-type" style="color:#dc2626">REDEEM</span></td>
+          <td><strong>${amount}</strong></td>
+          <td><span class="tx-status-success">SUCCESS</span></td>
+          <td class="text-muted">${txDate}</td>
+          <td class="text-muted">Full redemption</td>
+        </tr>`;
+    } else {
+      txBody.innerHTML = `
+        <tr>
+          <td><span class="tx-type">ISSUE</span></td>
+          <td><strong>${amount}</strong></td>
+          <td><span class="tx-status-success">SUCCESS</span></td>
+          <td class="text-muted">${txDate}</td>
+          <td class="text-muted">Issue amount of ${amount}</td>
+        </tr>`;
+    }
+
+    document.querySelectorAll('#view-issued .screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-issued-detail').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showIssuedList() {
+    document.querySelectorAll('#view-issued .screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-issued-list').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Token validation ──
   function validateToken() {
     const input = document.getElementById('gifty-token-input').value.trim();
     const btn = document.getElementById('step1-next-btn');
     const error = document.getElementById('token-error');
-
     resetTokenValidation();
-
     if (!input) {
       error.style.display = 'block';
       error.textContent = 'Please enter your Gifty API token.';
       return;
     }
-
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> Validating…';
     document.getElementById('validating-state').style.display = 'flex';
-
     setTimeout(() => {
       btn.disabled = false;
       btn.innerHTML = 'Validate &amp; Next →';
       document.getElementById('validating-state').style.display = 'none';
-
       const val = input.toLowerCase();
       if (val === 'invalid') {
         error.style.display = 'block';
@@ -1037,18 +1297,12 @@
   }
 
   function toggleAmountField(select) {
-    const amountField = document.getElementById('amount-field');
-    amountField.style.display = select.value === 'own' ? 'none' : 'block';
+    document.getElementById('amount-field').style.display = select.value === 'own' ? 'none' : 'block';
   }
 
   function toggleShippingPrice() {
-    const checkbox = document.getElementById('shipping-checkbox');
-    const field = document.getElementById('shipping-price-field');
-    field.style.display = checkbox.checked ? 'block' : 'none';
-  }
-
-  function saveAndBack() {
-    showScreen('screen-list');
+    document.getElementById('shipping-price-field').style.display =
+      document.getElementById('shipping-checkbox').checked ? 'block' : 'none';
   }
 
   function openDeleteDialog() {
