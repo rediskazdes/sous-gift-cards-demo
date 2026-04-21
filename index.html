@@ -346,6 +346,28 @@
     .validating { display: none; }
     .validated { display: none; }
     .validate-error { display: none; color: var(--danger); font-size: 11px; margin-top: 5px; }
+    .alert-error { background: #1f0707; border: 1px solid #4d1515; color: #fca5a5; }
+
+    /* ── Demo cheat sheet ── */
+    .wizard-wrap { display: flex; gap: 16px; align-items: flex-start; justify-content: center; }
+    .cheat-sheet {
+      background: #1a1506; border: 1px solid #3d3200;
+      border-radius: 10px; padding: 14px 16px;
+      width: 220px; flex-shrink: 0; font-size: 11px;
+    }
+    .cheat-sheet-title {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #a16207; font-weight: 600; margin-bottom: 10px;
+    }
+    .cheat-row { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+    .cheat-row:last-child { margin-bottom: 0; }
+    .cheat-keyword {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: #0f0d00; border: 1px solid #3d3200;
+      border-radius: 4px; padding: 3px 7px;
+      color: #fde68a; display: inline-block; font-size: 11px;
+    }
+    .cheat-desc { color: #a16207; font-size: 10px; line-height: 1.4; }
 
     /* ── Product list ── */
     .list-header {
@@ -563,49 +585,85 @@
 
       <!-- SCREEN 2: Wizard Step 1 -->
       <div class="screen" id="screen-wizard-1">
-        <div class="wizard-card">
-          <div class="wizard-header">
-            <div class="wizard-title">Set up gift cards</div>
-            <div class="wizard-subtitle">Connect your Gifty account to get started</div>
-            <div class="wizard-steps">
-              <div class="wizard-step-dot active" id="dot-step1">
-                <div class="step-num">1</div> Connect Gifty
+        <div class="wizard-wrap">
+          <div class="wizard-card" style="flex: 1; max-width: 520px; margin: 20px 0;">
+            <div class="wizard-header">
+              <div class="wizard-title">Set up gift cards</div>
+              <div class="wizard-subtitle">Connect your Gifty account to get started</div>
+              <div class="wizard-steps">
+                <div class="wizard-step-dot active">
+                  <div class="step-num">1</div> Connect Gifty
+                </div>
+                <div class="step-divider"></div>
+                <div class="wizard-step-dot">
+                  <div class="step-num">2</div> Add product
+                </div>
               </div>
-              <div class="step-divider"></div>
-              <div class="wizard-step-dot" id="dot-step2">
-                <div class="step-num">2</div> Add product
+            </div>
+            <div class="wizard-body">
+              <div class="form-group" style="margin-bottom: 12px;">
+                <label class="form-label">Gifty API Token <span class="required">*</span></label>
+                <input id="gifty-token-input" class="form-input mono" type="text" placeholder="gft_live_xxxxxxxxxxxxxxxxxxxx"
+                  oninput="resetTokenValidation()">
+                <div class="form-hint">Find this in your <a href="#" onclick="return false">Gifty dashboard → Settings → API</a></div>
+                <div class="validate-error" id="token-error"></div>
               </div>
+
+              <!-- Validating -->
+              <div class="alert alert-info" id="validating-state" style="display:none;">
+                <div class="alert-icon"><div class="spinner"></div></div>
+                <div>Validating token with Gifty…</div>
+              </div>
+
+              <!-- Success: connected with products -->
+              <div class="alert alert-success" id="state-success" style="display:none;">
+                <div class="alert-icon">✓</div>
+                <div><strong>Connected as Akropolis Geleen</strong><br>3 Gifty products available and ready to link.</div>
+              </div>
+
+              <!-- Success: connected but no products -->
+              <div class="alert alert-warning" id="state-no-products" style="display:none;">
+                <div class="alert-icon">⚠</div>
+                <div><strong>Connected — but no products found</strong><br>Create gift card products in your <a class="alert-link" href="#" onclick="return false">Gifty dashboard</a> first, then come back.</div>
+              </div>
+
+              <!-- Network / server error -->
+              <div class="alert alert-error" id="state-network-error" style="display:none;">
+                <div class="alert-icon">✕</div>
+                <div><strong>Could not reach Gifty</strong><br>Check your internet connection and try again, or contact support if the problem persists.</div>
+              </div>
+            </div>
+            <div class="wizard-footer">
+              <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-empty')">Cancel</button>
+              <button class="btn btn-primary btn-sm" id="step1-next-btn" onclick="validateToken()">
+                Validate &amp; Next →
+              </button>
             </div>
           </div>
-          <div class="wizard-body">
-            <div class="form-group">
-              <label class="form-label">Gifty API Token <span class="required">*</span></label>
-              <input id="gifty-token-input" class="form-input mono" type="password" placeholder="gft_live_xxxxxxxxxxxxxxxxxxxx"
-                oninput="resetTokenValidation()">
-              <div class="form-hint">Find this in your <a href="#" onclick="return false">Gifty dashboard → Settings → API</a></div>
-              <div class="validate-error" id="token-error">Invalid token — please check your Gifty dashboard and try again.</div>
-            </div>
 
-            <!-- Validating state (hidden by default) -->
-            <div class="alert alert-info validating" id="validating-state">
-              <div class="alert-icon"><div class="spinner"></div></div>
-              <div>Validating token with Gifty…</div>
+          <!-- Cheat sheet -->
+          <div class="cheat-sheet" style="margin-top: 20px;">
+            <div class="cheat-sheet-title">🔑 Demo states</div>
+            <div class="cheat-row">
+              <span class="cheat-keyword">anytoken</span>
+              <span class="cheat-desc">✓ Connected — 3 products available</span>
             </div>
-
-            <!-- Validated state (hidden by default) -->
-            <div class="alert alert-success validated" id="validated-state">
-              <div class="alert-icon">✓</div>
-              <div>
-                <strong>Connected as Akropolis Geleen</strong><br>
-                3 Gifty products available and ready to link.
-              </div>
+            <div class="cheat-row">
+              <span class="cheat-keyword">noproducts</span>
+              <span class="cheat-desc">⚠ Connected but no Gifty products found</span>
             </div>
-          </div>
-          <div class="wizard-footer">
-            <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-empty')">Cancel</button>
-            <button class="btn btn-primary btn-sm" id="step1-next-btn" onclick="validateToken()">
-              Validate &amp; Next →
-            </button>
+            <div class="cheat-row">
+              <span class="cheat-keyword">invalid</span>
+              <span class="cheat-desc">✕ Invalid token error</span>
+            </div>
+            <div class="cheat-row">
+              <span class="cheat-keyword">error</span>
+              <span class="cheat-desc">✕ Network / server error</span>
+            </div>
+            <div class="cheat-row">
+              <span class="cheat-keyword">(empty)</span>
+              <span class="cheat-desc">✕ Empty field validation</span>
+            </div>
           </div>
         </div>
       </div>
@@ -924,9 +982,9 @@
   function validateToken() {
     const input = document.getElementById('gifty-token-input').value.trim();
     const btn = document.getElementById('step1-next-btn');
-    const validating = document.getElementById('validating-state');
-    const validated = document.getElementById('validated-state');
     const error = document.getElementById('token-error');
+
+    resetTokenValidation();
 
     if (!input) {
       error.style.display = 'block';
@@ -934,34 +992,38 @@
       return;
     }
 
-    // Show validating
     btn.disabled = true;
     btn.innerHTML = '<div class="spinner"></div> Validating…';
-    validating.style.display = 'flex';
-    validated.style.display = 'none';
-    error.style.display = 'none';
+    document.getElementById('validating-state').style.display = 'flex';
 
     setTimeout(() => {
       btn.disabled = false;
-      btn.innerHTML = 'Next →';
-      validating.style.display = 'none';
+      btn.innerHTML = 'Validate &amp; Next →';
+      document.getElementById('validating-state').style.display = 'none';
 
-      // Simulate success for any input, error for 'invalid'
-      if (input.toLowerCase() === 'invalid') {
+      const val = input.toLowerCase();
+      if (val === 'invalid') {
         error.style.display = 'block';
         error.textContent = 'Invalid token — please check your Gifty dashboard and try again.';
+      } else if (val === 'noproducts') {
+        document.getElementById('state-no-products').style.display = 'flex';
+      } else if (val === 'error') {
+        document.getElementById('state-network-error').style.display = 'flex';
       } else {
-        validated.style.display = 'flex';
+        document.getElementById('state-success').style.display = 'flex';
         tokenValidated = true;
-        setTimeout(() => showScreen('screen-wizard-2'), 800);
+        setTimeout(() => showScreen('screen-wizard-2'), 900);
       }
     }, 1400);
   }
 
   function resetTokenValidation() {
-    document.getElementById('validated-state').style.display = 'none';
-    document.getElementById('validating-state').style.display = 'none';
-    document.getElementById('token-error').style.display = 'none';
+    ['validating-state','state-success','state-no-products','state-network-error'].forEach(id => {
+      document.getElementById(id).style.display = 'none';
+    });
+    const error = document.getElementById('token-error');
+    error.style.display = 'none';
+    error.textContent = '';
   }
 
   function toggleAmountField(select) {
