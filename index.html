@@ -5,6 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gift Card Setup — SOUS Merchant Portal</title>
   <style>
+    /* ── Password gate ── */
+    #gate {
+      position: fixed; inset: 0; z-index: 999;
+      background: #0f1117;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #gate.hidden { display: none; }
+    .gate-card {
+      background: #161b27; border: 1px solid #2a3248;
+      border-radius: 14px; padding: 40px 36px;
+      width: 100%; max-width: 360px; text-align: center;
+    }
+    .gate-logo { font-size: 28px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .gate-logo span { color: #6366f1; }
+    .gate-subtitle { font-size: 13px; color: #8892a4; margin-bottom: 28px; }
+    .gate-input {
+      width: 100%; background: #1e2535; border: 1px solid #2a3248;
+      border-radius: 8px; padding: 11px 14px; font-size: 14px;
+      color: #e2e8f0; font-family: inherit; margin-bottom: 10px;
+      text-align: center; letter-spacing: 0.05em;
+      transition: border-color 0.15s;
+    }
+    .gate-input:focus { outline: none; border-color: #6366f1; }
+    .gate-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
+    .gate-error { color: #f87171; font-size: 12px; margin-bottom: 10px; min-height: 18px; }
+    .gate-btn {
+      width: 100%; background: #6366f1; color: white;
+      border: none; border-radius: 8px; padding: 11px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: background 0.15s;
+    }
+    .gate-btn:hover { background: #4f52d9; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%,60% { transform: translateX(-6px); }
+      40%,80% { transform: translateX(6px); }
+    }
+  </style>
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -432,6 +471,18 @@
 </head>
 <body>
 
+<!-- Password gate -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo"><span>SOUS</span> Portal</div>
+    <div class="gate-subtitle">Enter the password to view this demo</div>
+    <input id="gate-input" class="gate-input" type="password" placeholder="Password"
+      onkeydown="if(event.key==='Enter') checkPassword()">
+    <div class="gate-error" id="gate-error"></div>
+    <button class="gate-btn" onclick="checkPassword()">View demo</button>
+  </div>
+</div>
+
 <!-- Demo banner -->
 <div class="demo-bar">
   <div>🎁 <strong>SOUS Merchant Portal</strong> — Gift Card Setup Demo (PAT-100)</div>
@@ -825,6 +876,28 @@
 </div>
 
 <script>
+  // Gate
+  (function() {
+    if (sessionStorage.getItem('sous_demo_auth') === '1') {
+      document.getElementById('gate').classList.add('hidden');
+    }
+  })();
+
+  function checkPassword() {
+    const val = document.getElementById('gate-input').value;
+    const input = document.getElementById('gate-input');
+    const error = document.getElementById('gate-error');
+    if (val === 'denisbest') {
+      sessionStorage.setItem('sous_demo_auth', '1');
+      document.getElementById('gate').classList.add('hidden');
+    } else {
+      error.textContent = 'Incorrect password. Please try again.';
+      input.classList.add('error');
+      input.value = '';
+      setTimeout(() => input.classList.remove('error'), 400);
+    }
+  }
+
   let tokenValidated = false;
 
   function switchTab(tab) {
